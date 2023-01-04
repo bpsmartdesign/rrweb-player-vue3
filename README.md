@@ -1,18 +1,60 @@
-# Vue 3 + TypeScript + Vite
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+# rrweb player vue
 
-## Recommended IDE Setup
+Vue-based player for [rrweb](https://github.com/rrweb-io/rrweb)
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Installation
 
-## Type Support For `.vue` Imports in TS
+### npm
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+```sh
+npm install @bpsmartdesign/rrweb-player-vue-3
+```
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+### Yarn
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+```sh
+yarn add @bpsmartdesign/rrweb-player-vue-3
+```
+
+## Basic usage
+
+```vue
+<template>
+  <RrWebPlayer :events="events" />
+</template>
+
+<script>
+import RrWebPlayer from '@bpsmartdesign/rrweb-player-vue-3'
+export default {
+  components: {
+    RrWebPlayer
+  },
+  data: () => ({
+    events: []
+  })
+}
+</script>
+
+```
+
+## Props
+
+| Name | Type     | Default                |
+| :-------- | :------- | :------------------------- |
+| events | `Array` | `[]` |
+| width | `number` | `1024` |
+| height | `number` | `576` |
+| skipInactive | `boolean` | `true` |
+| autoplay | `boolean` | `true` |
+| speedOption | `number[]` | `[1, 2, 4, 8]` |
+| speed | `number` | `speedOption[0]` |
+| showController | `boolean` | `true` |
+| tags | `Object` | `{}` |
+
+## Events
+
+| Name |
+| :-------- |
+| ui-update-current-time
+| ui-update-player-state
