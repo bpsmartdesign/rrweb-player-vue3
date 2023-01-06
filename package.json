@@ -1,5 +1,5 @@
 {
-  "name": "rrweb-player-vue3",
+  "name": "@bpsmartdesign/rrweb-player-vue3",
   "type": "module",
   "version": "0.0.1",
   "description": "Vue3-based player for [rrweb](https://github.com/rrweb-io/rrweb)",
