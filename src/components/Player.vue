@@ -44,13 +44,13 @@ const emit = defineEmits([
 const props = withDefaults(defineProps<PlayerProps>(), {
   width: undefined,
   height: undefined,
-  events: undefined,
+  events: () => [],
   skipInactive: false,
   autoPlay: true,
-  speedOption: undefined,
+  speedOption: () => [1, 2, 4, 8],
   speed: undefined,
   showController: true,
-  tags: undefined,
+  tags: () => ({}),
 });
 
 const _width = ref<number>(0);
@@ -65,50 +65,53 @@ const _defaultSkipInactive = ref<boolean>(false);
 const __player = ref<HTMLDivElement>();
 const __frame = ref<HTMLDivElement>();
 
-// @ts-expect-error
-const computedWidth = computed<number>(() => {
-  get: () => props.width ?? _defaultWidth.value;
-  set: (v: number) => {
-    if (props.width) {
-      emit("update:width", v);
-    } else {
-      _defaultWidth.value = v;
-    }
-  };
-});
-// @ts-expect-error
-const computedHeight = computed<number>(() => {
-  get: () => props.height ?? _defaultHeight.value;
-  set: (v: number) => {
-    if (props.height) {
-      emit("update:height", v);
-    } else {
-      _defaultHeight.value = v;
-    }
-  };
-});
-// @ts-expect-error
-const computedSpeed = computed<number>(() => {
-  get: (): number => props.speed ?? _defaultSpeed.value;
-  set: (v: number) => {
-    if (props.speed) {
-      emit("update:speed", v);
-    } else {
-      _defaultSpeed.value = v;
-    }
-  };
-});
-// @ts-expect-error
-const computedSkipInactive = computed<boolean>(() => {
-  get: (): boolean => props.skipInactive ?? _defaultSkipInactive.value;
-  set: (v: boolean) => {
-    if (props.skipInactive) {
-      emit("update:skip-inactive", v);
-    } else {
-      _defaultSkipInactive.value = v;
-    }
-  };
-});
+
+const computedWidth = ref<number>(props.width ?? _defaultWidth.value)
+const computedHeight = ref<number>(props.height ?? _defaultHeight.value)
+const computedSpeed = ref<number>(props.speed ?? _defaultSpeed.value)
+const computedSkipInactive = ref<boolean>(props.skipInactive ?? _defaultSkipInactive.value)
+
+// const _computedWidth = computed<number>(() => {
+//   get: () => props.width ?? _defaultWidth.value;
+//   set: (v: number) => {
+//     if (props.width) {
+//       emit("update:width", v);
+//     } else {
+//       _defaultWidth.value = v;
+//     }
+//   };
+// });
+// const _computedHeight = computed<number>(() => {
+//   get: () => props.height ?? _defaultHeight.value;
+//   set: (v: number) => {
+//     if (props.height) {
+//       emit("update:height", v);
+//     } else {
+//       _defaultHeight.value = v;
+//     }
+//   };
+// });
+// const _computedSpeed = computed<number>(() => {
+//   get: (): number => props.speed ?? _defaultSpeed.value;
+//   set: (v: number) => {
+//     if (props.speed) {
+//       emit("update:speed", v);
+//     } else {
+//       _defaultSpeed.value = v;
+//     }
+//   };
+// });
+// const _computedSkipInactive = computed<boolean>(() => {
+//   get: (): boolean => props.skipInactive ?? _defaultSkipInactive.value;
+//   set: (v: boolean) => {
+//     if (props.skipInactive) {
+//       emit("update:skip-inactive", v);
+//     } else {
+//       _defaultSkipInactive.value = v;
+//     }
+//   };
+// });
+
 const style = computed<string>(() =>
   inlineCss({
     width: `${computedWidth.value}px`,
@@ -238,7 +241,7 @@ onUnmounted(() => {
 <template>
   <div class="rr-player" ref="__player" :style="playerStyle">
     <div class="rr-player__frame" ref="__frame" :style="style"></div>
-    <template v-if="Object.values(_replayer as any).length">
+    <template v-if="_replayer && Object.values(_replayer as any).length">
       <Controller
         ref="controller"
         :replayer="_replayer"
@@ -257,7 +260,7 @@ onUnmounted(() => {
 </template>
 
 <style>
-@import "node_modules/rrweb/dist/rrweb.min.css";
+/* @import "node_modules/rrweb/dist/rrweb.min.css"; */
 .rr-player {
   position: relative;
   background: white;
