@@ -7,8 +7,8 @@
   "module": "dist/es.js",
   "exports": {
     ".": {
-      "import": "./dist/es.js",
-      "require": "./dist/umd.js"
+      "import": "./dist/@bpsmartdesign/rrweb-player-vue3.js",
+      "require": "./dist/@bpsmartdesign/rrweb-player-vue3.umd.cjs"
     },
     "./dist/style.css": "./dist/style.css"
   },

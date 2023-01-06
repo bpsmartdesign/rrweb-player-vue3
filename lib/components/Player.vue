@@ -65,11 +65,12 @@ const _defaultSkipInactive = ref<boolean>(false);
 const __player = ref<HTMLDivElement>();
 const __frame = ref<HTMLDivElement>();
 
-
-const computedWidth = ref<number>(props.width ?? _defaultWidth.value)
-const computedHeight = ref<number>(props.height ?? _defaultHeight.value)
-const computedSpeed = ref<number>(props.speed ?? _defaultSpeed.value)
-const computedSkipInactive = ref<boolean>(props.skipInactive ?? _defaultSkipInactive.value)
+const computedWidth = ref<number>(props.width ?? _defaultWidth.value);
+const computedHeight = ref<number>(props.height ?? _defaultHeight.value);
+const computedSpeed = ref<number>(props.speed ?? _defaultSpeed.value);
+const computedSkipInactive = ref<boolean>(
+  props.skipInactive ?? _defaultSkipInactive.value
+);
 
 const style = computed<string>(() =>
   inlineCss({
@@ -111,11 +112,11 @@ const toggleFullScreen = () => {
   }
 };
 const toggleSkipInactive = () => {
-  computedSkipInactive.value = !computedSkipInactive.value
-}
+  computedSkipInactive.value = !computedSkipInactive.value;
+};
 const setSpeed = (val: number) => {
-  computedSpeed.value = val
-}
+  computedSpeed.value = val;
+};
 
 watch(
   () => computedSpeed.value,
@@ -226,6 +227,8 @@ onUnmounted(() => {
 </template>
 
 <style>
+@import "./../style.css";
+
 .rr-player {
   position: relative;
   background: white;
