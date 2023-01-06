@@ -1,7 +1,7 @@
 
 # rrweb player vue
 
-Vue-based player for [rrweb](https://github.com/rrweb-io/rrweb)
+Vue3-based player for [rrweb](https://github.com/rrweb-io/rrweb)
 
 ## Installation
 
