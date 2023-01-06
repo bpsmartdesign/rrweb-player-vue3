@@ -32,7 +32,7 @@ export interface PlayerProps {
   tags: Record<string, string>;
 }
 
-const emit = defineEmits([
+defineEmits([
   "update:skip-inactive",
   "update:speed",
   "update:height",
