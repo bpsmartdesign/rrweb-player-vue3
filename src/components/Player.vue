@@ -7,8 +7,18 @@ import {
   exitFullscreen,
   isFullscreen,
   onFullscreenChange,
+  inlineCss,
 } from "./../utils";
-import { computed, nextTick, onMounted, ref, WritableComputedRef } from "vue";
+import {
+  computed,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+  WritableComputedRef,
+} from "vue";
+import Controller from "./Controller.vue";
 
 export interface PlayerProps {
   width?: number;
@@ -21,6 +31,15 @@ export interface PlayerProps {
   showController: boolean;
   tags: Record<string, string>;
 }
+
+const emit = defineEmits([
+  "update:skip-inactive",
+  "update:speed",
+  "update:height",
+  "update:width",
+  "ui-update-current-time",
+  "ui-update-player-state",
+]);
 
 const props = withDefaults(defineProps<PlayerProps>(), {
   width: undefined,
@@ -40,12 +59,8 @@ const _defaultSpeed = ref<number>(1);
 const _defaultWidth = ref<number>(1024);
 const _defaultHeight = ref<number>(576);
 const _replayer = ref<Replayer>();
-
-// @ts-ignore
 const _controllerHeight = ref<number>(80);
-// @ts-ignore
 const _defaultSkipInactive = ref<boolean>(false);
-
 
 const __player = ref<HTMLDivElement>();
 const __frame = ref<HTMLDivElement>();
@@ -55,7 +70,7 @@ const computedWidth = computed<number>(() => {
   get: () => props.width ?? _defaultWidth.value;
   set: (v: number) => {
     if (props.width) {
-      // emit event?
+      emit("update:width", v);
     } else {
       _defaultWidth.value = v;
     }
@@ -66,7 +81,7 @@ const computedHeight = computed<number>(() => {
   get: () => props.height ?? _defaultHeight.value;
   set: (v: number) => {
     if (props.height) {
-      // emit event?
+      emit("update:height", v);
     } else {
       _defaultHeight.value = v;
     }
@@ -77,12 +92,41 @@ const computedSpeed = computed<number>(() => {
   get: (): number => props.speed ?? _defaultSpeed.value;
   set: (v: number) => {
     if (props.speed) {
-      // emit event?
+      emit("update:speed", v);
     } else {
       _defaultSpeed.value = v;
     }
   };
 });
+// @ts-expect-error
+const computedSkipInactive = computed<boolean>(() => {
+  get: (): boolean => props.skipInactive ?? _defaultSkipInactive.value;
+  set: (v: boolean) => {
+    if (props.skipInactive) {
+      emit("update:skip-inactive", v);
+    } else {
+      _defaultSkipInactive.value = v;
+    }
+  };
+});
+const style = computed<string>(() =>
+  inlineCss({
+    width: `${computedWidth.value}px`,
+    height: `${computedHeight.value}px`,
+  })
+);
+const playerStyle = computed<string>(() =>
+  inlineCss({
+    width: `${computedWidth.value}px`,
+    height: `${
+      computedHeight.value + (props.showController ? _controllerHeight.value : 0)
+    }px`,
+  })
+);
+const replayerInitialized = computed(() => _replayer.value instanceof Replayer);
+const frame = computed(() => __frame.value);
+
+let fullScreenListener = () => {};
 
 const updateScale = (
   el: HTMLElement | undefined,
@@ -99,12 +143,28 @@ const updateScale = (
     )}) translate(-50%, -50%)`;
   }
 };
-// @ts-expect-error
 const toggleFullScreen = () => {
   if (__player.value) {
-    isFullscreen() ? exitFullscreen() : openFullscreen(__player.value)
+    isFullscreen() ? exitFullscreen() : openFullscreen(__player.value);
   }
-}
+};
+
+watch(
+  () => computedSpeed.value,
+  (val) => {
+    if (!replayerInitialized) return;
+    _replayer.value?.setConfig({ speed: val });
+  },
+  { immediate: true }
+);
+watch(
+  () => computedSkipInactive.value,
+  (val) => {
+    if (!replayerInitialized) return;
+    _replayer.value?.setConfig({ skipInactive: val });
+  },
+  { immediate: true }
+);
 
 onMounted(async () => {
   if (props.speedOption !== undefined && !Array.isArray(props.speedOption)) {
@@ -132,7 +192,7 @@ onMounted(async () => {
 
   _replayer.value = new Replayer(props.events, {
     speed: computedSpeed.value,
-    root: __frame.value,
+    root: frame.value,
     unpackFn: unpack,
   });
 
@@ -146,13 +206,15 @@ onMounted(async () => {
     }
   );
 
-  onFullscreenChange(() => {
+  fullScreenListener = onFullscreenChange(() => {
     if (isFullscreen()) {
       setTimeout(() => {
         _width.value = computedWidth.value;
         _height.value = computedHeight.value;
-        (computedWidth as WritableComputedRef<number>).value = __player.value?.offsetWidth ?? 0;
-        (computedHeight as WritableComputedRef<number>).value = __player.value?.offsetHeight ?? 0;
+        (computedWidth as WritableComputedRef<number>).value =
+          __player.value?.offsetWidth ?? 0;
+        (computedHeight as WritableComputedRef<number>).value =
+          __player.value?.offsetHeight ?? 0;
         updateScale(_replayer.value?.wrapper, {
           width: _replayer.value?.iframe.offsetWidth ?? 0,
           height: _replayer.value?.iframe.offsetHeight ?? 0,
@@ -160,7 +222,7 @@ onMounted(async () => {
       }, 0);
     } else {
       (computedWidth as WritableComputedRef<number>).value = _width.value;
-        (computedHeight as WritableComputedRef<number>).value = _height.value;
+      (computedHeight as WritableComputedRef<number>).value = _height.value;
       updateScale(_replayer.value?.wrapper, {
         width: _replayer.value?.iframe.offsetWidth ?? 0,
         height: _replayer.value?.iframe.offsetHeight ?? 0,
@@ -168,10 +230,55 @@ onMounted(async () => {
     }
   });
 });
+onUnmounted(() => {
+  fullScreenListener && fullScreenListener();
+});
 </script>
 
 <template>
-  <div class="rr-player" ref="__player">
-    <div class="rr-player__frame" ref="__frame"></div>
+  <div class="rr-player" ref="__player" :style="playerStyle">
+    <div class="rr-player__frame" ref="__frame" :style="style"></div>
+    <template v-if="Object.values(_replayer as any).length">
+      <Controller
+        ref="controller"
+        :replayer="_replayer"
+        :skip-inactive.sync="computedSkipInactive"
+        :show-controller="showController"
+        :auto-play="autoPlay"
+        :speed-option="speedOption"
+        :tags="tags"
+        :speed.sync="computedSpeed"
+        @fullscreen="toggleFullScreen"
+        @ui-update-current-time="$emit('ui-update-current-time', $event.payload)"
+        @ui-update-player-state="$emit('ui-update-player-state', $event.payload)"
+      />
+    </template>
   </div>
 </template>
+
+<style>
+@import "node_modules/rrweb/dist/rrweb.min.css";
+.rr-player {
+  position: relative;
+  background: white;
+  float: left;
+  border-radius: 5px;
+  box-shadow: 0 24px 48px rgba(17, 16, 62, 0.12);
+}
+
+.rr-player__frame {
+  overflow: hidden;
+}
+
+.replayer-wrapper {
+  float: left;
+  clear: both;
+  transform-origin: top left;
+  left: 50%;
+  top: 50%;
+}
+
+.replayer-wrapper > iframe {
+  border: none;
+}
+</style>

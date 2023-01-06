@@ -25,7 +25,14 @@ type CustomEvent = {
   position: string;
 };
 
-const emit = defineEmits(['update:speed', 'fullscreen', 'update:skip-inactive', 'ui-update-current-time', 'ui-update-progress', 'ui-update-player-state']);
+const emit = defineEmits([
+  "update:speed",
+  "fullscreen",
+  "update:skip-inactive",
+  "ui-update-current-time",
+  "ui-update-progress",
+  "ui-update-player-state"
+]);
 
 const props = withDefaults(defineProps<RRWebControllerProps>(), {
   replayer: undefined,
