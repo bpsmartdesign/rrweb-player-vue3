@@ -8,32 +8,34 @@ Vue3-based player for [rrweb](https://github.com/rrweb-io/rrweb)
 ### npm
 
 ```sh
-npm install @bpsmartdesign/rrweb-player-vue-3
+npm install @bpsmartdesign/rrweb-player-vue3
 ```
 
 ### Yarn
 
 ```sh
-yarn add @bpsmartdesign/rrweb-player-vue-3
+yarn add @bpsmartdesign/rrweb-player-vue3
+```
+
+### pnpm
+
+```sh
+pnpm install @bpsmartdesign/rrweb-player-vue3
 ```
 
 ## Basic usage
 
 ```vue
 <template>
-  <RrWebPlayer :events="events" />
+  <RRWebPlayer :events="events" />
 </template>
 
-<script>
-import RrWebPlayer from '@bpsmartdesign/rrweb-player-vue-3'
-export default {
-  components: {
-    RrWebPlayer
-  },
-  data: () => ({
-    events: []
-  })
-}
+<script lang="ts" setup>
+import { ref } from "vue"
+import { RRWebPlayer } from '@bpsmartdesign/rrweb-player-vue3'
+import '@bpsmartdesign/rrweb-player-vue3/dist/styles.css'
+
+const events = ref<any[]>([]) // Events are required, Full type will be available in next versions
 </script>
 
 ```
@@ -58,3 +60,8 @@ export default {
 | :-------- |
 | ui-update-current-time
 | ui-update-player-state
+
+## Notes
+
+- Typscript types will be fully available in the nexts version
+- If you like it, give a star 🙂.
