@@ -26,9 +26,9 @@ type CustomEvent = {
 };
 
 const emit = defineEmits([
-  "update:speed",
+  "speed",
   "fullscreen",
-  "update:skip-inactive",
+  "skip-inactive",
   "ui-update-current-time",
   "ui-update-progress",
   "ui-update-player-state"
@@ -154,7 +154,7 @@ const toggle = () => {
 };
 const setSpeed = (newSpeed: number) => {
   let needFreeze = _playerState.value === "playing";
-  emit("update:speed", newSpeed);
+  emit("speed", newSpeed);
   if (needFreeze) {
     props.replayer.pause();
   }
@@ -162,9 +162,6 @@ const setSpeed = (newSpeed: number) => {
   if (needFreeze) {
     props.replayer.play(_currentTime.value);
   }
-};
-const toggleSkipInactive = () => {
-  emit('update:skip-inactive', !props.skipInactive);
 };
 const handleProgressClick = (e: MouseEvent) => {
   if (!progress) return;
@@ -333,7 +330,7 @@ onUnmounted(() => {
       <PlayerSwitch
         id="skip"
         :checked="skipInactive"
-        @input="toggleSkipInactive"
+        @input="$emit('skip-inactive')"
         :disabled="_speedState === 'skipping'"
         label="skip inactive"
       />

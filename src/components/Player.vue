@@ -151,6 +151,13 @@ const toggleFullScreen = () => {
     isFullscreen() ? exitFullscreen() : openFullscreen(__player.value);
   }
 };
+const toggleSkipInactive = () => {
+  console.log('toggle skip inactive')
+  computedSkipInactive.value = !computedSkipInactive.value
+}
+const setSpeed = (val: number) => {
+  computedSpeed.value = val
+}
 
 watch(
   () => computedSpeed.value,
@@ -245,12 +252,13 @@ onUnmounted(() => {
       <Controller
         ref="controller"
         :replayer="_replayer"
-        :skip-inactive.sync="computedSkipInactive"
         :show-controller="showController"
         :auto-play="autoPlay"
         :speed-option="speedOption"
         :tags="tags"
-        :speed.sync="computedSpeed"
+        :speed="computedSpeed"
+        @speed="setSpeed"
+        @skip-inactive="toggleSkipInactive"
         @fullscreen="toggleFullScreen"
         @ui-update-current-time="$emit('ui-update-current-time', $event.payload)"
         @ui-update-player-state="$emit('ui-update-player-state', $event.payload)"
