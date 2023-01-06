@@ -12,6 +12,8 @@ const props = withDefaults(defineProps<PlayerSwitchProps>(), {
   id: "skip-inactive-checkbox",
   label: "",
 });
+
+defineEmits(['input'])
 </script>
 
 <template>
