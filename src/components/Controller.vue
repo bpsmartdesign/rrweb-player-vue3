@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, onUpdated, ref } from "vue";
+import { computed, onMounted, onUnmounted, onUpdated, ref, watch } from "vue";
 import PlayerSwitch from "./PlayerSwitch.vue";
 import { EventType } from "rrweb";
 import { formatTime } from "./../utils";
@@ -24,6 +24,8 @@ type CustomEvent = {
   background: string;
   position: string;
 };
+
+const emit = defineEmits(['update:speed', 'fullscreen', 'update:skip-inactive', 'ui-update-current-time', 'ui-update-progress', 'ui-update-player-state']);
 
 const props = withDefaults(defineProps<RRWebControllerProps>(), {
   replayer: undefined,
@@ -143,11 +145,9 @@ const toggle = () => {
       break;
   }
 };
-// @ts-expect-error
 const setSpeed = (newSpeed: number) => {
   let needFreeze = _playerState.value === "playing";
-  //! Send emit event
-  // $emit("update:speed", newSpeed);
+  emit("update:speed", newSpeed);
   if (needFreeze) {
     props.replayer.pause();
   }
@@ -157,8 +157,7 @@ const setSpeed = (newSpeed: number) => {
   }
 };
 const toggleSkipInactive = () => {
-  //! Emit skip inactive event
-  // this.$emit('update:skip-inactive', !props.skipInactive);
+  emit('update:skip-inactive', !props.skipInactive);
 };
 const handleProgressClick = (e: MouseEvent) => {
   if (!progress) return;
@@ -177,7 +176,18 @@ const handleProgressClick = (e: MouseEvent) => {
   goTo(timeOffset);
 };
 
-
+watch(() => _currentTime.value, (val) => {
+  emit('ui-update-current-time', { payload: val })
+  //? What is this technique below
+  //
+  const percent = Math.min(1, _currentTime.value / _meta.value.totalTime);
+  _percentage.value = `${100 * percent}%`;
+  emit('ui-update-progress', { payload: percent });
+  //
+})
+watch(() => _playerState.value, (val) => {
+  emit('ui-update-player-state', { payload: val })
+})
 
 onMounted(async () => {
   _meta.value = props.replayer.getMetaData();
