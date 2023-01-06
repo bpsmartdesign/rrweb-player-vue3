@@ -240,7 +240,7 @@ onUpdated(() => {
 onUnmounted(() => {
   props.replayer.pause()
   stopTimer()
-}),
+})
 </script>
 
 <template>
@@ -271,7 +271,7 @@ onUnmounted(() => {
 
         <div class="rr-progress__handler" :style="{ left: _percentage }" />
       </div>
-      <span class="rr-timeline__time">{{ formatTimeLocal(_meta.totalTime) }}</span>
+      <span class="rr-timeline__time">{{ formatTimeLocal(_meta?.totalTime) }}</span>
     </div>
     <div class="rr-controller__btns">
       <button @click="toggle">
