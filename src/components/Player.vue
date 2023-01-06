@@ -71,47 +71,6 @@ const computedHeight = ref<number>(props.height ?? _defaultHeight.value)
 const computedSpeed = ref<number>(props.speed ?? _defaultSpeed.value)
 const computedSkipInactive = ref<boolean>(props.skipInactive ?? _defaultSkipInactive.value)
 
-// const _computedWidth = computed<number>(() => {
-//   get: () => props.width ?? _defaultWidth.value;
-//   set: (v: number) => {
-//     if (props.width) {
-//       emit("update:width", v);
-//     } else {
-//       _defaultWidth.value = v;
-//     }
-//   };
-// });
-// const _computedHeight = computed<number>(() => {
-//   get: () => props.height ?? _defaultHeight.value;
-//   set: (v: number) => {
-//     if (props.height) {
-//       emit("update:height", v);
-//     } else {
-//       _defaultHeight.value = v;
-//     }
-//   };
-// });
-// const _computedSpeed = computed<number>(() => {
-//   get: (): number => props.speed ?? _defaultSpeed.value;
-//   set: (v: number) => {
-//     if (props.speed) {
-//       emit("update:speed", v);
-//     } else {
-//       _defaultSpeed.value = v;
-//     }
-//   };
-// });
-// const _computedSkipInactive = computed<boolean>(() => {
-//   get: (): boolean => props.skipInactive ?? _defaultSkipInactive.value;
-//   set: (v: boolean) => {
-//     if (props.skipInactive) {
-//       emit("update:skip-inactive", v);
-//     } else {
-//       _defaultSkipInactive.value = v;
-//     }
-//   };
-// });
-
 const style = computed<string>(() =>
   inlineCss({
     width: `${computedWidth.value}px`,
@@ -152,7 +111,6 @@ const toggleFullScreen = () => {
   }
 };
 const toggleSkipInactive = () => {
-  console.log('toggle skip inactive')
   computedSkipInactive.value = !computedSkipInactive.value
 }
 const setSpeed = (val: number) => {
@@ -162,7 +120,7 @@ const setSpeed = (val: number) => {
 watch(
   () => computedSpeed.value,
   (val) => {
-    if (!replayerInitialized) return;
+    if (!replayerInitialized.value) return;
     _replayer.value?.setConfig({ speed: val });
   },
   { immediate: true }
@@ -170,7 +128,7 @@ watch(
 watch(
   () => computedSkipInactive.value,
   (val) => {
-    if (!replayerInitialized) return;
+    if (!replayerInitialized.value) return;
     _replayer.value?.setConfig({ skipInactive: val });
   },
   { immediate: true }
@@ -268,7 +226,6 @@ onUnmounted(() => {
 </template>
 
 <style>
-/* @import "node_modules/rrweb/dist/rrweb.min.css"; */
 .rr-player {
   position: relative;
   background: white;

@@ -1,7 +1,7 @@
 {
   "name": "@bpsmartdesign/rrweb-player-vue3",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Vue3-based player for [rrweb](https://github.com/rrweb-io/rrweb)",
   "main": "dist/rrweb-player-vue.ssr.js",
   "browser": "dist/rrweb-player-vue.esm.js",
@@ -39,19 +39,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bpsmartdesign/rrweb-player-vue-3.git"
+    "url": "git+https://github.com/bpsmartdesign/rrweb-player-vue3.git"
   },
   "keywords": [
     "vue3",
     "rrweb",
     "rrweb-player",
     "rrweb-player-vue",
-    "rrweb-player-vue-3"
+    "rrweb-player-vue3"
   ],
   "author": "bpsmartdesign",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bpsmartdesign/rrweb-player-vue-3/issues"
+    "url": "https://github.com/bpsmartdesign/rrweb-player-vue3/issues"
   },
-  "homepage": "https://github.com/bpsmartdesign/rrweb-player-vue-3#readme"
+  "homepage": "https://github.com/bpsmartdesign/rrweb-player-vue3#readme"
 }
