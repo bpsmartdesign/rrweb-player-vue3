@@ -15,6 +15,7 @@ export interface RRWebControllerProps {
   autoPlay: boolean;
   speedOption: number[];
   speed: number;
+  goTo: number;
   showController: boolean;
   tags: Record<string, string>;
 }
@@ -40,6 +41,7 @@ const props = withDefaults(defineProps<RRWebControllerProps>(), {
   autoPlay: true,
   speedOption: undefined,
   speed: undefined,
+  goTo: undefined,
   showController: true,
   tags: undefined,
 });
@@ -226,6 +228,10 @@ onMounted(async () => {
 
   if (props.autoPlay) {
     props.replayer.play()
+  }
+
+  if (props.goTo) {
+    goTo(props.goTo)
   }
 });
 onUpdated(() => {

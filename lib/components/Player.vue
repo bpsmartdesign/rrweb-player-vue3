@@ -23,6 +23,7 @@ import Controller from "./Controller.vue";
 export interface PlayerProps {
   width?: number;
   height?: number;
+  goTo?: number;
   events: eventWithTime[];
   skipInactive?: boolean;
   autoPlay?: boolean;
@@ -44,6 +45,7 @@ defineEmits([
 const props = withDefaults(defineProps<PlayerProps>(), {
   width: undefined,
   height: undefined,
+  goTo: undefined,
   events: () => [],
   skipInactive: false,
   autoPlay: true,
@@ -216,6 +218,7 @@ onUnmounted(() => {
         :speed-option="speedOption"
         :tags="tags"
         :speed="computedSpeed"
+        :go-to="goTo"
         @speed="setSpeed"
         @skip-inactive="toggleSkipInactive"
         @fullscreen="toggleFullScreen"

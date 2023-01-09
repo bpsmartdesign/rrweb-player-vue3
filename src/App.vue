@@ -7,5 +7,5 @@ const _events = ref<any[]>(events)
 </script>
 
 <template>
-  <Player :events="_events" />
+  <Player :events="_events" :go-to="5000" :auto-play="false" />
 </template>
