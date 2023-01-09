@@ -47,6 +47,7 @@ const events = ref<any[]>([]) // Events are required, Full type will be availabl
 | events | `Array` | `[]` |
 | width | `number` | `1024` |
 | height | `number` | `576` |
+| goto | `number` | `undefined` |
 | skipInactive | `boolean` | `true` |
 | autoplay | `boolean` | `true` |
 | speedOption | `number[]` | `[1, 2, 4, 8]` |
@@ -65,3 +66,27 @@ const events = ref<any[]>([]) // Events are required, Full type will be availabl
 
 - Typscript types will be fully available in the nexts version
 - If you like it, give a star 🙂.
+
+## Versions
+
+### v-1.0.0
+
+DONE
+
+- The initial version of rrweb-player for vue3
+
+TODO
+
+- Fix `skip innactive`
+- Set definitions files for ts and autocomplete
+
+### v-1.0.1
+
+DONE
+
+- Add `goTo` feature (Can be used to start for a random time)
+
+TODO
+
+- Fix `skip innactive`
+- Set definitions files for ts and autocomplete
