@@ -33,7 +33,7 @@ pnpm install @bpsmartdesign/rrweb-player-vue3
 <script lang="ts" setup>
 import { ref } from "vue"
 import { RRWebPlayer } from '@bpsmartdesign/rrweb-player-vue3'
-import '@bpsmartdesign/rrweb-player-vue3/dist/styles.css'
+import '@bpsmartdesign/rrweb-player-vue3/dist/style.css'
 
 const events = ref<any[]>([]) // Events are required, Full type will be available in next versions
 </script>
