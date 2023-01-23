@@ -69,24 +69,26 @@ const events = ref<any[]>([]) // Events are required, Full type will be availabl
 
 ## Versions
 
-### v-1.0.0
+### To-Do
 
-DONE
+-[x] The initial version of rrweb-player for vue3
+-[ ] Fix `skip innactive`
+-[ ] Fix `go-to`
+-[ ] Fix auto-play setted to true sometimes
+-[ ] Set definitions files for ts and autocomplete
 
-- The initial version of rrweb-player for vue3
+## Issues / Suggestions
 
-TODO
+If you find any bugs or if you have any suggestion, please open an issue.
 
-- Fix `skip innactive`
-- Set definitions files for ts and autocomplete
+## Get in touch
 
-### v-1.0.1
+- Author:  BIYA Paul (bpsmartdesign) <bpsmartdesign@hotmail.com>
+- [github](https://github.com/bpsmartdesign)
+- [portfolio](https://bpsmartdesign.netlify.app)
 
-DONE
+## Suport
 
-- Add `goTo` feature (Can be used to start for a random time)
-
-TODO
-
-- Fix `skip innactive`
-- Set definitions files for ts and autocomplete
+<a href="https://www.buymeacoffee.com/bpsmartdesign">
+  <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a Sandwitch 😉&emoji=🥪&slug=bpsmartdesign&button_colour=5F7FFF&font_colour=ffffff&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" />
+</a>

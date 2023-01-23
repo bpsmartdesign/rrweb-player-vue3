@@ -1,7 +1,7 @@
 {
   "name": "@bpsmartdesign/rrweb-player-vue3",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Vue3-based player for [rrweb](https://github.com/rrweb-io/rrweb)",
   "main": "dist/umd.js",
   "module": "dist/es.js",
