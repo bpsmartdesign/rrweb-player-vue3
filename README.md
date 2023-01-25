@@ -90,5 +90,5 @@ If you find any bugs or if you have any suggestion, please open an issue.
 ## Suport
 
 <a href="https://www.buymeacoffee.com/bpsmartdesign">
-  <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a Sandwitch 😉&emoji=🥪&slug=bpsmartdesign&button_colour=5F7FFF&font_colour=ffffff&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" />
+  <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a Sandwich 😉&emoji=🥪&slug=bpsmartdesign&button_colour=5F7FFF&font_colour=ffffff&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" />
 </a>
