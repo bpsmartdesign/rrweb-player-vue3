@@ -32,7 +32,7 @@ const emit = defineEmits([
   "skip-inactive",
   "ui-update-current-time",
   "ui-update-progress",
-  "ui-update-player-state"
+  "ui-update-player-state",
 ]);
 
 const props = withDefaults(defineProps<RRWebControllerProps>(), {
@@ -181,18 +181,24 @@ const handleProgressClick = (e: MouseEvent) => {
   goTo(timeOffset);
 };
 
-watch(() => _currentTime.value, (val) => {
-  emit('ui-update-current-time', { payload: val })
-  //? What is this technique below
-  //
-  const percent = Math.min(1, _currentTime.value / _meta.value.totalTime);
-  _percentage.value = `${100 * percent}%`;
-  emit('ui-update-progress', { payload: percent });
-  //
-})
-watch(() => _playerState.value, (val) => {
-  emit('ui-update-player-state', { payload: val })
-})
+watch(
+  () => _currentTime.value,
+  (val) => {
+    emit("ui-update-current-time", { payload: val });
+    //? What is this technique below
+    //
+    const percent = Math.min(1, _currentTime.value / _meta.value.totalTime);
+    _percentage.value = `${100 * percent}%`;
+    emit("ui-update-progress", { payload: percent });
+    //
+  }
+);
+watch(
+  () => _playerState.value,
+  (val) => {
+    emit("ui-update-player-state", { payload: val });
+  }
+);
 
 onMounted(async () => {
   _meta.value = props.replayer.getMetaData();
@@ -227,22 +233,24 @@ onMounted(async () => {
   });
 
   if (props.autoPlay) {
-    props.replayer.play()
+    props.replayer.play();
   }
 
   if (props.goTo) {
-    goTo(props.goTo)
+    goTo(props.goTo);
   }
+
+  console.log('customEvents', customEvents.value)
 });
 onUpdated(() => {
   if (props.skipInactive !== props.replayer.config.skipInactive) {
-    props.replayer.setConfig({ skipInactive: props.skipInactive })
+    props.replayer.setConfig({ skipInactive: props.skipInactive });
   }
 });
 onUnmounted(() => {
-  props.replayer.pause()
-  stopTimer()
-})
+  props.replayer.pause();
+  stopTimer();
+});
 </script>
 
 <template>
@@ -256,20 +264,20 @@ onUnmounted(() => {
         @click="handleProgressClick"
       >
         <div class="rr-progress__step" ref="__step" :style="{ width: _percentage }" />
-        <template v-for="(event, index) in customEvents" :key="index">
-          <div
-            :title="event.name"
-            :data-id="index"
-            style="
-              width: 10px;
-              height: 5px;
-              position: absolute;
-              top: 2px;
-              transform: translate(-50%, -50%);
-            "
-            :style="{ background: event.background, left: event.position }"
-          />
-        </template>
+        <div
+          v-for="(event, index) in customEvents"
+          :key="index"
+          :title="event.name"
+          :data-id="index"
+          style="
+            width: 10px;
+            height: 5px;
+            position: absolute;
+            top: 2px;
+            transform: translate(-50%, -50%);
+          "
+          :style="{ background: event.background, left: event.position }"
+        />
 
         <div class="rr-progress__handler" :style="{ left: _percentage }" />
       </div>
@@ -346,8 +354,8 @@ onUnmounted(() => {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlns:xlink="http://www.w3.org/1999/xlink"
-          width="16"
-          height="16"
+          width="12"
+          height="12"
         >
           <path
             d="M916 380c-26.4 0-48-21.6-48-48L868 223.2 613.6 477.6c-18.4
@@ -428,6 +436,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   font-size: 13px;
 }
 
@@ -440,8 +449,12 @@ onUnmounted(() => {
   justify-content: center;
   background: none;
   border: none;
-  border-radius: 50%;
+  border-radius: 5px;
   cursor: pointer;
+}
+
+.rr-controller__btns button:hover {
+  opacity: .75;
 }
 
 .rr-controller__btns button:active {
