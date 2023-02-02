@@ -48,7 +48,7 @@ const props = withDefaults(defineProps<PlayerProps>(), {
   goTo: undefined,
   events: () => [],
   skipInactive: false,
-  autoPlay: true,
+  autoPlay: false,
   speedOption: () => [1, 2, 4, 8],
   speed: undefined,
   showController: true,
