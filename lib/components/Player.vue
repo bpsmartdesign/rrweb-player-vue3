@@ -254,7 +254,6 @@ onUnmounted(() => {
         @ui-update-player-state="$emit('ui-update-player-state', $event.payload)"
       />
     </template>
-    {{ JSON.stringify(computedSkipInactive) }}
   </div>
 </template>
 
