@@ -10,7 +10,7 @@ const _events = ref<any[]>(events);
 
 <template>
   <div>
-    <Player :events="_events" :width="900" :height="350" :auto-play="false" /> <br />
+    <Player :events="_events" :width="900" :height="350" :auto-play="true" /> <br />
   </div>
   <!-- <Player :events="_events3" :width="800" :height="350" :go-to="15000" :auto-play="false" /> -->
 </template>
