@@ -1,4 +1,5 @@
-<script setup lang="ts">
+<script setup lang="ts">import { computed, ref } from 'vue';
+
 export interface PlayerSwitchProps {
   disabled?: boolean;
   checked?: boolean;
@@ -12,8 +13,14 @@ const props = withDefaults(defineProps<PlayerSwitchProps>(), {
   id: "skip-inactive-checkbox",
   label: "",
 });
+const emit = defineEmits(['input'])
 
-defineEmits(['input'])
+const isChecked = ref<boolean>(props.checked)
+const checked = computed(() => isChecked.value)
+
+const onToggleCheck = () => {
+  emit('input', checked.value)
+}
 </script>
 
 <template>
@@ -21,8 +28,8 @@ defineEmits(['input'])
     <input
       type="checkbox"
       :id="props.id"
-      :checked="props.checked"
-      @change="$emit('input', $event)"
+      v-model="isChecked"
+      @change="onToggleCheck"
       :disabled="props.disabled"
     />
     <label :for="props.id" />
