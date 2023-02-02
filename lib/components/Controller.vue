@@ -180,6 +180,9 @@ const handleProgressClick = (e: MouseEvent) => {
   const timeOffset = _meta.value.totalTime * percent;
   goTo(timeOffset);
 };
+const toggleSkipInactive = (canSkip: boolean) => {
+  emit("skip-inactive", canSkip);
+};
 
 watch(
   () => _currentTime.value,
@@ -239,8 +242,6 @@ onMounted(async () => {
   if (props.goTo) {
     goTo(props.goTo);
   }
-
-  console.log('customEvents', customEvents.value)
 });
 onUpdated(() => {
   if (props.skipInactive !== props.replayer.config.skipInactive) {
@@ -343,9 +344,9 @@ onUnmounted(() => {
       <PlayerSwitch
         id="skip"
         :checked="skipInactive"
-        @input="$emit('skip-inactive')"
         :disabled="_speedState === 'skipping'"
-        label="skip inactive"
+        :label="_speedState === 'skipping' ? 'Skiping ...' : 'skip inactive'"
+        @input="toggleSkipInactive"
       />
       <button @click="$emit('fullscreen')">
         <svg
@@ -454,7 +455,7 @@ onUnmounted(() => {
 }
 
 .rr-controller__btns button:hover {
-  opacity: .75;
+  opacity: 0.75;
 }
 
 .rr-controller__btns button:active {
