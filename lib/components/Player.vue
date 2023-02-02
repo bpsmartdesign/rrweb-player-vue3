@@ -33,7 +33,7 @@ export interface PlayerProps {
   tags: Record<string, string>;
 }
 
-defineEmits([
+const emit = defineEmits([
   "update:skip-inactive",
   "update:speed",
   "update:height",
@@ -46,12 +46,12 @@ const props = withDefaults(defineProps<PlayerProps>(), {
   width: undefined,
   height: undefined,
   goTo: undefined,
-  events: () => [],
-  skipInactive: false,
-  autoPlay: false,
-  speedOption: () => [1, 2, 4, 8],
   speed: undefined,
+  autoPlay: false,
+  skipInactive: false,
   showController: true,
+  events: () => [],
+  speedOption: () => [1, 2, 4, 8],
   tags: () => ({}),
 });
 
@@ -67,13 +67,8 @@ const _defaultSkipInactive = ref<boolean>(false);
 const __player = ref<HTMLDivElement>();
 const __frame = ref<HTMLDivElement>();
 
-const computedWidth = ref<number>(props.width ?? _defaultWidth.value);
-const computedHeight = ref<number>(props.height ?? _defaultHeight.value);
-const computedSpeed = ref<number>(props.speed ?? _defaultSpeed.value);
-const computedSkipInactive = ref<boolean>(
-  props.skipInactive ?? _defaultSkipInactive.value
-);
-
+const frame = computed(() => __frame.value);
+const replayerInitialized = computed(() => _replayer.value instanceof Replayer);
 const style = computed<string>(() =>
   inlineCss({
     width: `${computedWidth.value}px`,
@@ -88,8 +83,47 @@ const playerStyle = computed<string>(() =>
     }px`,
   })
 );
-const replayerInitialized = computed(() => _replayer.value instanceof Replayer);
-const frame = computed(() => __frame.value);
+const computedSpeed = computed({
+  get: () => props.speed ?? _defaultSpeed.value,
+  set(speed: number) {
+    if (props.speed) {
+      emit('update:speed', speed)
+    } else {
+      _defaultSpeed.value = speed
+    }
+  }
+})
+const computedWidth = computed({
+  get: () => props.width ?? _defaultWidth.value,
+  set(width: number) {
+    if (props.width) {
+      emit('update:width', width)
+    } else {
+      _defaultWidth.value = width
+    }
+  }
+})
+const computedHeight = computed({
+  get: () => props.height ?? _defaultHeight.value,
+  set(height: number) {
+    if (props.height) {
+      emit('update:height', height)
+    } else {
+      _defaultHeight.value = height
+    }
+  }
+})
+const computedSkipInactive = computed({
+  get: () => props.skipInactive ?? _defaultSkipInactive.value,
+  set(skipInactive: boolean) {
+    console.log('setting up skip-inactive: ', skipInactive)
+    if (props.skipInactive !== undefined) {
+      emit('update:skip-inactive', skipInactive)
+    } else {
+      _defaultSkipInactive.value = skipInactive
+    }
+  }
+})
 
 let fullScreenListener = () => {};
 
@@ -113,8 +147,8 @@ const toggleFullScreen = () => {
     isFullscreen() ? exitFullscreen() : openFullscreen(__player.value);
   }
 };
-const toggleSkipInactive = () => {
-  computedSkipInactive.value = !computedSkipInactive.value;
+const toggleSkipInactive = (canSkip: boolean) => {
+  computedSkipInactive.value = canSkip;
 };
 const setSpeed = (val: number) => {
   computedSpeed.value = val;
