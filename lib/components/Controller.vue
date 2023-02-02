@@ -38,7 +38,7 @@ const emit = defineEmits([
 const props = withDefaults(defineProps<RRWebControllerProps>(), {
   replayer: undefined,
   skipInactive: true,
-  autoPlay: true,
+  autoPlay: false,
   speedOption: undefined,
   speed: undefined,
   goTo: undefined,
@@ -118,16 +118,11 @@ const loopTimer = () => {
   _timer.value = requestAnimationFrame(update);
 };
 const goTo = (timeOffset: number) => {
-  const isPlaying = _playerState.value === "playing";
-
   _currentTime.value = timeOffset;
 
   props.replayer.pause();
   props.replayer.play(timeOffset);
-
-  if (!isPlaying) {
-    props.replayer.pause();
-  }
+  props.replayer.pause();
 };
 const play = () => {
   if (_playerState.value !== "paused") {
