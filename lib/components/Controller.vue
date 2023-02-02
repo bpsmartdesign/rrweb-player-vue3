@@ -37,7 +37,7 @@ const emit = defineEmits([
 
 const props = withDefaults(defineProps<RRWebControllerProps>(), {
   replayer: undefined,
-  skipInactive: false,
+  skipInactive: true,
   autoPlay: true,
   speedOption: undefined,
   speed: undefined,
@@ -46,6 +46,8 @@ const props = withDefaults(defineProps<RRWebControllerProps>(), {
   tags: undefined,
 });
 
+const _sRef = ref<string>("player-ref");
+const _currentSkipInactive = ref<boolean>(props.skipInactive)
 const _currentTime = ref<number>(0);
 const _timer = ref<number>(0);
 const _playerState = ref<"playing" | "paused" | "live">("playing");
@@ -57,6 +59,8 @@ const _percentage = ref<string>("");
 const __progress = ref<HTMLDivElement>();
 const __step = ref<HTMLDivElement>();
 
+const _ref = computed(() => _sRef.value);
+const effectiveSkipInactive = computed(() => _currentSkipInactive.value)
 const step = computed(() => __step.value);
 const progress = computed(() => __progress.value);
 const customEvents = computed(() => {
@@ -182,6 +186,8 @@ const handleProgressClick = (e: MouseEvent) => {
 };
 const toggleSkipInactive = (canSkip: boolean) => {
   emit("skip-inactive", canSkip);
+  _currentSkipInactive.value = canSkip
+  _sRef.value = (Math.random() + 1).toString(36).substring(2)
 };
 
 watch(
@@ -244,8 +250,8 @@ onMounted(async () => {
   }
 });
 onUpdated(() => {
-  if (props.skipInactive !== props.replayer.config.skipInactive) {
-    props.replayer.setConfig({ skipInactive: props.skipInactive });
+  if (effectiveSkipInactive.value !== props.replayer.config.skipInactive) {
+    props.replayer.setConfig({ skipInactive: effectiveSkipInactive.value });
   }
 });
 onUnmounted(() => {
@@ -343,6 +349,7 @@ onUnmounted(() => {
       </template>
       <PlayerSwitch
         id="skip"
+        :ref="_ref"
         :checked="skipInactive"
         :disabled="_speedState === 'skipping'"
         :label="_speedState === 'skipping' ? 'Skiping ...' : 'skip inactive'"

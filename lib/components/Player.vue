@@ -48,7 +48,7 @@ const props = withDefaults(defineProps<PlayerProps>(), {
   goTo: undefined,
   speed: undefined,
   autoPlay: false,
-  skipInactive: false,
+  skipInactive: true,
   showController: true,
   events: () => [],
   speedOption: () => [1, 2, 4, 8],
@@ -62,7 +62,7 @@ const _defaultWidth = ref<number>(1024);
 const _defaultHeight = ref<number>(576);
 const _replayer = ref<Replayer>();
 const _controllerHeight = ref<number>(80);
-const _defaultSkipInactive = ref<boolean>(false);
+const _defaultSkipInactive = ref<boolean>(true);
 
 const __player = ref<HTMLDivElement>();
 const __frame = ref<HTMLDivElement>();
@@ -114,9 +114,8 @@ const computedHeight = computed({
   }
 })
 const computedSkipInactive = computed({
-  get: () => props.skipInactive ?? _defaultSkipInactive.value,
+  get: () => props.skipInactive === undefined ? _defaultSkipInactive.value : props.skipInactive,
   set(skipInactive: boolean) {
-    console.log('setting up skip-inactive: ', skipInactive)
     if (props.skipInactive !== undefined) {
       emit('update:skip-inactive', skipInactive)
     } else {
@@ -148,7 +147,10 @@ const toggleFullScreen = () => {
   }
 };
 const toggleSkipInactive = (canSkip: boolean) => {
+  if (!replayerInitialized.value) return;
+
   computedSkipInactive.value = canSkip;
+  _replayer.value?.setConfig({ skipInactive: canSkip });
 };
 const setSpeed = (val: number) => {
   computedSpeed.value = val;
@@ -159,14 +161,6 @@ watch(
   (val) => {
     if (!replayerInitialized.value) return;
     _replayer.value?.setConfig({ speed: val });
-  },
-  { immediate: true }
-);
-watch(
-  () => computedSkipInactive.value,
-  (val) => {
-    if (!replayerInitialized.value) return;
-    _replayer.value?.setConfig({ skipInactive: val });
   },
   { immediate: true }
 );
@@ -260,6 +254,7 @@ onUnmounted(() => {
         @ui-update-player-state="$emit('ui-update-player-state', $event.payload)"
       />
     </template>
+    {{ JSON.stringify(computedSkipInactive) }}
   </div>
 </template>
 
