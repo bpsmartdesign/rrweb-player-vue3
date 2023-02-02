@@ -47,7 +47,7 @@ const events = ref<any[]>([]) // Events are required, Full type will be availabl
 | events | `Array` | `[]` |
 | width | `number` | `1024` |
 | height | `number` | `576` |
-| goto | `number` | `undefined` |
+| goTo | `number` | `undefined` |
 | skipInactive | `boolean` | `true` |
 | autoplay | `boolean` | `true` |
 | speedOption | `number[]` | `[1, 2, 4, 8]` |
@@ -71,11 +71,11 @@ const events = ref<any[]>([]) // Events are required, Full type will be availabl
 
 ### To-Do
 
--[x] The initial version of rrweb-player for vue3
--[ ] Fix `skip innactive`
--[ ] Fix `go-to`
--[ ] Fix auto-play setted to true sometimes
--[ ] Set definitions files for ts and autocomplete
+- [x] The initial version of rrweb-player for vue3
+- [x] Fix `skip innactive`
+- [x] Fix `go-to`
+- [x] Fix auto-play setted to true sometimes
+- [ ] Set definitions files for ts and autocomplete
 
 ## Issues / Suggestions
 
