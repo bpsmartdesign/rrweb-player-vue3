@@ -164,7 +164,6 @@ watch(
   },
   { immediate: true }
 );
-
 onMounted(async () => {
   if (props.speedOption !== undefined && !Array.isArray(props.speedOption)) {
     throw new Error("speedOption must be array");
