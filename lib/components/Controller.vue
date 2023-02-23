@@ -122,9 +122,7 @@ const goTo = (timeOffset: number) => {
 
   props.replayer.pause();
   props.replayer.play(timeOffset);
-
-  if (_playerState.value === 'paused')
-    props.replayer.pause();
+  props.replayer.pause();
 };
 const play = () => {
   if (_playerState.value !== "paused") {
