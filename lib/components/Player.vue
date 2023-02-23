@@ -41,7 +41,6 @@ const emit = defineEmits([
   "ui-update-current-time",
   "ui-update-player-state",
 ]);
-
 const props = withDefaults(defineProps<PlayerProps>(), {
   width: undefined,
   height: undefined,
@@ -55,6 +54,7 @@ const props = withDefaults(defineProps<PlayerProps>(), {
   tags: () => ({}),
 });
 
+//#region ref
 const _width = ref<number>(0);
 const _height = ref<number>(0);
 const _defaultSpeed = ref<number>(1);
@@ -64,9 +64,12 @@ const _replayer = ref<Replayer>();
 const _controllerHeight = ref<number>(80);
 const _defaultSkipInactive = ref<boolean>(true);
 
+// __DOM
 const __player = ref<HTMLDivElement>();
 const __frame = ref<HTMLDivElement>();
+//#endregion
 
+//#region computed
 const frame = computed(() => __frame.value);
 const replayerInitialized = computed(() => _replayer.value instanceof Replayer);
 const style = computed<string>(() =>
@@ -123,7 +126,9 @@ const computedSkipInactive = computed({
     }
   }
 })
+//#endregion
 
+//#region functions
 let fullScreenListener = () => {};
 
 const updateScale = (
@@ -155,7 +160,9 @@ const toggleSkipInactive = (canSkip: boolean) => {
 const setSpeed = (val: number) => {
   computedSpeed.value = val;
 };
+//#endregion
 
+//#region hook
 watch(
   () => computedSpeed.value,
   (val) => {
@@ -231,6 +238,7 @@ onMounted(async () => {
 onUnmounted(() => {
   fullScreenListener && fullScreenListener();
 });
+//#endregion
 </script>
 
 <template>
