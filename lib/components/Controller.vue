@@ -11,13 +11,13 @@ import type { PlayerMachineState, SpeedMachineState } from "rrweb/typings/replay
 
 export interface RRWebControllerProps {
   replayer: Replayer;
-  skipInactive: boolean;
+  skipInactive?: boolean;
   autoPlay: boolean;
   speedOption: number[];
   speed: number;
-  goTo: number;
+  goTo?: number;
   showController: boolean;
-  tags: Record<string, string>;
+  tags?: Record<string, string>;
 }
 
 type CustomEvent = {
@@ -88,7 +88,7 @@ const customEvents = computed(() => {
     if (event.type === EventType.Custom) {
       const customEvent = {
         name: event.data.tag,
-        background: props.tags[event.data.tag] || "rgb(73, 80, 246)",
+        background: props.tags ? props.tags[event.data.tag] : "rgb(73, 80, 246)",
         position: `${position(start, end, event.timestamp)}%`,
       };
       _customEvents.push(customEvent);

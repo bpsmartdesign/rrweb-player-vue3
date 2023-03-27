@@ -27,10 +27,10 @@ export interface PlayerProps {
   events: eventWithTime[];
   skipInactive?: boolean;
   autoPlay?: boolean;
-  speedOption: number[];
+  speedOption?: number[];
   speed?: number;
-  showController: boolean;
-  tags: Record<string, string>;
+  showController?: boolean;
+  tags?: Record<string, string>;
 }
 
 const emit = defineEmits([
@@ -44,7 +44,7 @@ const emit = defineEmits([
 const props = withDefaults(defineProps<PlayerProps>(), {
   width: undefined,
   height: undefined,
-  goTo: undefined,
+  goTo: 0,
   speed: undefined,
   autoPlay: false,
   skipInactive: true,
@@ -253,7 +253,7 @@ onUnmounted(() => {
         :speed-option="speedOption"
         :tags="tags"
         :speed="computedSpeed"
-        :go-to="goTo"
+        :go-to="goTo ?? 0"
         @speed="setSpeed"
         @skip-inactive="toggleSkipInactive"
         @fullscreen="toggleFullScreen"
