@@ -7,7 +7,10 @@ import { formatTime } from "./../utils";
 // @ts-expect-error
 import type { playerMetaData } from "rrweb/typings/types";
 import type { Replayer } from "rrweb";
-import type { PlayerMachineState, SpeedMachineState } from "rrweb/typings/replay/machine";
+import type {
+  PlayerMachineState,
+  SpeedMachineState,
+} from "rrweb/typings/replay/machine";
 
 export interface RRWebControllerProps {
   replayer: Replayer;
@@ -46,8 +49,9 @@ const props = withDefaults(defineProps<RRWebControllerProps>(), {
   tags: undefined,
 });
 
+//#region refs
 const _sRef = ref<string>("player-ref");
-const _currentSkipInactive = ref<boolean>(props.skipInactive)
+const _currentSkipInactive = ref<boolean>(props.skipInactive);
 const _currentTime = ref<number>(0);
 const _timer = ref<number>(0);
 const _playerState = ref<"playing" | "paused" | "live">("playing");
@@ -58,9 +62,11 @@ const _percentage = ref<string>("");
 
 const __progress = ref<HTMLDivElement>();
 const __step = ref<HTMLDivElement>();
+//#endregion
 
+//#region computed
 const _ref = computed(() => _sRef.value);
-const effectiveSkipInactive = computed(() => _currentSkipInactive.value)
+const effectiveSkipInactive = computed(() => _currentSkipInactive.value);
 const step = computed(() => __step.value);
 const progress = computed(() => __progress.value);
 const customEvents = computed(() => {
@@ -88,7 +94,9 @@ const customEvents = computed(() => {
     if (event.type === EventType.Custom) {
       const customEvent = {
         name: event.data.tag,
-        background: props.tags ? props.tags[event.data.tag] : "rgb(73, 80, 246)",
+        background: props.tags
+          ? props.tags[event.data.tag]
+          : "rgb(73, 80, 246)",
         position: `${position(start, end, event.timestamp)}%`,
       };
       _customEvents.push(customEvent);
@@ -96,7 +104,9 @@ const customEvents = computed(() => {
   });
   return _customEvents;
 });
+//#endregion
 
+//#region functions
 const formatTimeLocal = (ms: number) => formatTime(ms);
 const stopTimer = () => {
   if (_timer.value) {
@@ -117,12 +127,15 @@ const loopTimer = () => {
 
   _timer.value = requestAnimationFrame(update);
 };
-const goTo = (timeOffset: number) => {
+const goTo = (timeOffset: number, play?: boolean) => {
   _currentTime.value = timeOffset;
 
-  props.replayer.pause();
-  props.replayer.play(timeOffset);
-  props.replayer.pause();
+  const resumePlaying = typeof play === "boolean" ? play : _playerState.value === "playing";
+  if (resumePlaying) {
+    props.replayer.play(timeOffset);
+  } else {
+    props.replayer.pause(timeOffset);
+  }
 };
 const play = () => {
   if (_playerState.value !== "paused") {
@@ -181,10 +194,12 @@ const handleProgressClick = (e: MouseEvent) => {
 };
 const toggleSkipInactive = (canSkip: boolean) => {
   emit("skip-inactive", canSkip);
-  _currentSkipInactive.value = canSkip
-  _sRef.value = (Math.random() + 1).toString(36).substring(2)
+  _currentSkipInactive.value = canSkip;
+  _sRef.value = (Math.random() + 1).toString(36).substring(2);
 };
+//#endregion
 
+//#region hooks
 watch(
   () => _currentTime.value,
   (val) => {
@@ -205,6 +220,7 @@ watch(
 );
 
 onMounted(async () => {
+  console.log(": ", props.goTo);
   _meta.value = props.replayer.getMetaData();
   _playerState.value = props.replayer.service.state.value;
   _speedState.value = props.replayer.speedService.state.value;
@@ -236,7 +252,8 @@ onMounted(async () => {
     _finished.value = true;
   });
 
-  if (props.autoPlay) {
+  if (props.autoPlay === true) {
+    props.replayer.resetCache();
     props.replayer.play();
   }
 
@@ -253,6 +270,7 @@ onUnmounted(() => {
   props.replayer.pause();
   stopTimer();
 });
+//#endregion
 </script>
 
 <template>
@@ -265,7 +283,11 @@ onUnmounted(() => {
         ref="__progress"
         @click="handleProgressClick"
       >
-        <div class="rr-progress__step" ref="__step" :style="{ width: _percentage }" />
+        <div
+          class="rr-progress__step"
+          ref="__step"
+          :style="{ width: _percentage }"
+        />
         <div
           v-for="(event, index) in customEvents"
           :key="index"
@@ -283,7 +305,9 @@ onUnmounted(() => {
 
         <div class="rr-progress__handler" :style="{ left: _percentage }" />
       </div>
-      <span class="rr-timeline__time">{{ formatTimeLocal(_meta?.totalTime) }}</span>
+      <span class="rr-timeline__time">{{
+        formatTimeLocal(_meta?.totalTime)
+      }}</span>
     </div>
     <div class="rr-controller__btns">
       <button aria-label="is-toggler" @click="toggle">
