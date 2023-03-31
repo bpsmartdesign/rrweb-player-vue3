@@ -27,6 +27,7 @@ const onToggleCheck = () => {
   <div class="rr-player-switch" :class="{ disabled }">
     <input
       type="checkbox"
+      aria-label="is-switcher"
       :id="props.id"
       v-model="isChecked"
       @change="onToggleCheck"

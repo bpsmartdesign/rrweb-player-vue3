@@ -286,7 +286,7 @@ onUnmounted(() => {
       <span class="rr-timeline__time">{{ formatTimeLocal(_meta?.totalTime) }}</span>
     </div>
     <div class="rr-controller__btns">
-      <button @click="toggle">
+      <button aria-label="is-toggler" @click="toggle">
         <template v-if="_playerState === 'playing'">
           <svg
             class="icon"
@@ -338,6 +338,7 @@ onUnmounted(() => {
           :class="{ active: s === speed && _speedState !== 'skipping' }"
           @click="setSpeed(s)"
           :disabled="_speedState === 'skipping'"
+          :aria-label="s.toString()"
         >
           {{ s }}x
         </button>
@@ -350,7 +351,7 @@ onUnmounted(() => {
         :label="_speedState === 'skipping' ? 'Skiping ...' : 'skip inactive'"
         @input="toggleSkipInactive"
       />
-      <button @click="$emit('fullscreen')">
+      <button aria-label="is-fullscreen" @click="$emit('fullscreen')">
         <svg
           class="icon"
           viewBox="0 0 1024 1024"
