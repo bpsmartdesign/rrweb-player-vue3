@@ -129,13 +129,12 @@ const loopTimer = () => {
 };
 const goTo = (timeOffset: number, play?: boolean) => {
   _currentTime.value = timeOffset;
-
-  const resumePlaying = typeof play === "boolean" ? play : _playerState.value === "playing";
-  if (resumePlaying) {
-    props.replayer.play(timeOffset);
-  } else {
+  const resumePlaying = _playerState.value === "playing";
+  props.replayer.pause();
+  props.replayer.play(timeOffset);
+  if (!resumePlaying) {
     props.replayer.pause(timeOffset);
-  }
+  } 
 };
 const play = () => {
   if (_playerState.value !== "paused") {
