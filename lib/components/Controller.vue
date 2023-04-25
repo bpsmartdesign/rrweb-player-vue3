@@ -129,7 +129,6 @@ const loopTimer = () => {
 };
 const goTo = (timeOffset: number, play?: boolean) => {
   _currentTime.value = timeOffset;
-
   const resumePlaying = typeof play === "boolean" ? play : _playerState.value === "playing";
   if (resumePlaying) {
     props.replayer.play(timeOffset);
